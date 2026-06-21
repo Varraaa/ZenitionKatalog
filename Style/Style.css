@@ -1947,7 +1947,8 @@ button {
 
 /* Struktur Tombol Hamburger (Bisa digunakan di ukuran mobile) */
 .nav-toggle {
-  display: none; /* Sembunyikan default di Desktop/Tablet */
+  display: none;
+  /* Sembunyikan default di Desktop/Tablet */
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -1976,9 +1977,12 @@ button {
 
 /* TABLET LAYOUT (Lebar layar maksimal 1024px) */
 @media (max-width: 1024px) {
-  .container, .nav-inner {
+
+  .container,
+  .nav-inner {
     padding: 0 var(--sp-lg);
   }
+
   .nav-links {
     gap: var(--sp-lg);
   }
@@ -1988,31 +1992,35 @@ button {
 @media (max-width: 768px) {
   body.nav-open {
     /* Menghindari ketidaksengajaan scroll saat menu dibuka */
-    overflow: hidden; 
+    overflow: hidden;
   }
 
   .nav-toggle {
-    display: inline-flex; /* Tampilkan hamburger di mobile */
+    display: inline-flex;
+    /* Tampilkan hamburger di mobile */
   }
 
   /* PANEL DROPDOWN NAV (TIDAK FULL SCREEN) */
   .nav-links {
     position: absolute;
-    top: var(--nav-h); /* Muncul tepat di bawah navbar */
+    top: var(--nav-h);
+    /* Muncul tepat di bawah navbar */
     left: 0;
     width: 100%;
-    height: auto; /* Mengikuti tinggi jumlah menu, tidak full screen */
+    height: auto;
+    /* Mengikuti tinggi jumlah menu, tidak full screen */
     background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 25px; /* Menggunakan padding per link agar rapi */
+    gap: 25px;
+    /* Menggunakan padding per link agar rapi */
     padding: var(--sp-md) 0;
     border-bottom: 1px solid var(--c-border);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    
+
     /* Efek transisi meluncur ke bawah (Slide Down) */
     transform: translateY(-20px);
     opacity: 0;
@@ -2037,28 +2045,33 @@ button {
     color: var(--c-text);
     width: 100%;
     text-align: left;
-    padding: var(--sp-md) var(--sp-lg); /* Padding empuk agar mudah di-tap jari */
+    padding: var(--sp-md) var(--sp-lg);
+    /* Padding empuk agar mudah di-tap jari */
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     transition: background var(--t-fast), color var(--t-fast);
   }
 
   .nav-link:last-child {
-    border-bottom: none; /* Hilangkan garis di item terakhir */
+    border-bottom: none;
+    /* Hilangkan garis di item terakhir */
   }
 
   .nav-link::after {
-    display: none; /* Matikan animasi underline desktop di mobile */
+    display: none;
+    /* Matikan animasi underline desktop di mobile */
   }
 
-  .nav-link:hover, .nav-link.active {
+  .nav-link:hover,
+  .nav-link.active {
     background: var(--c-bg-alt);
     color: var(--c-accent);
-    padding-left: calc(var(--sp-lg) + 6px); /* Efek geser sedikit saat aktif */
+    padding-left: calc(var(--sp-lg) + 6px);
+    /* Efek geser sedikit saat aktif */
   }
 
   /* Sembunyikan tombol CTA bawaan desktop di ukuran mobile */
   .nav-cta {
-    display: none; 
+    display: none;
   }
 
   /* ANIMASI HAMBURGER JADI SILANG (X) */

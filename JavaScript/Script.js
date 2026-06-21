@@ -329,7 +329,7 @@ function handleNewsletter(e) {
     const nav = document.getElementById('navbar');
     const navInner = document.querySelector('.nav-inner');
     const navLinks = document.querySelector('.nav-links');
-    
+
     if (!nav || !navInner || !navLinks) return;
 
     // 1. Membuat tombol hamburger secara otomatis lewat DOM JavaScript
