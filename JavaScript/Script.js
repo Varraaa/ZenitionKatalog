@@ -2,6 +2,11 @@
  * Zenition — main.js
  * Native JavaScript: No frameworks, no dependencies.
  * Covers: sticky nav, scroll reveal, count-up, filter tabs, newsletter, active links.
+ *
+ * v2.1: scroll-spy navbar diganti dengan algoritma berbasis posisi scroll
+ * (bukan rasio IntersectionObserver) supaya section yang lebih tinggi dari
+ * viewport (Collection, About, dll) tetap bisa men-trigger status aktif
+ * dengan benar di mobile — sebelumnya nav bisa "nyangkut" di section lama.
  */
 
 'use strict';
@@ -143,11 +148,20 @@
 
 
 /* ─────────────────────────────────────────────
-   5. ACTIVE NAV LINK (Scroll Spy)
+   5. ACTIVE NAV LINK (Scroll Spy) — FIXED
+   Sebelumnya pakai IntersectionObserver dengan threshold rasio (0.35),
+   yang gagal ter-trigger kalau tinggi section (mis. Collection / About)
+   jauh lebih besar dari viewport mobile, sehingga link nav "nyangkut"
+   di section sebelumnya (Home) walau user sudah scroll ke section lain.
+
+   Solusi: hitung section aktif berdasarkan posisi scroll relatif terhadap
+   garis bawah navbar (probe line), dievaluasi tiap event scroll dengan
+   requestAnimationFrame supaya tetap ringan & akurat di semua ukuran section.
 ───────────────────────────────────────────── */
 (function initScrollSpy() {
     const navLinks = document.querySelectorAll('.nav-link');
-    const sections = ['home', 'collection', 'about', 'location']
+    const sectionIds = ['home', 'collection', 'about', 'location'];
+    const sections = sectionIds
         .map(id => document.getElementById(id))
         .filter(Boolean);
 
@@ -162,16 +176,49 @@
         });
     }
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) setActive(entry.target.id);
-            });
-        },
-        { threshold: 0.35, rootMargin: `-${getComputedStyle(document.documentElement).getPropertyValue('--nav-h')} 0px 0px 0px` }
-    );
+    function getNavHeight() {
+        const raw = getComputedStyle(document.documentElement).getPropertyValue('--nav-h');
+        return parseInt(raw, 10) || 76;
+    }
 
-    sections.forEach(s => observer.observe(s));
+    let ticking = false;
+
+    function updateActiveSection() {
+        const probeLine = getNavHeight() + 4; // sedikit di bawah navbar
+
+        // Cari section terakhir yang top-nya sudah melewati probe line.
+        let currentId = sections[0].id;
+        for (let i = 0; i < sections.length; i++) {
+            const rect = sections[i].getBoundingClientRect();
+            if (rect.top <= probeLine) {
+                currentId = sections[i].id;
+            } else {
+                break;
+            }
+        }
+
+        // Kalau sudah mentok di bawah halaman, paksa aktifkan section terakhir
+        // (berguna kalau section terakhir lebih pendek dari sisa viewport).
+        const docHeight = document.documentElement.scrollHeight;
+        const scrolledToBottom = (window.innerHeight + window.scrollY) >= (docHeight - 2);
+        if (scrolledToBottom) {
+            currentId = sections[sections.length - 1].id;
+        }
+
+        setActive(currentId);
+        ticking = false;
+    }
+
+    function onScrollOrResize() {
+        if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(updateActiveSection);
+        }
+    }
+
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    updateActiveSection(); // jalankan sekali saat load
 })();
 
 
