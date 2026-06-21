@@ -318,3 +318,87 @@ function handleNewsletter(e) {
         });
     });
 })();
+
+
+
+
+/* ──────────────────────────────────────────────────────────────────────────
+   MOBILE NAVIGATION TOGGLE (Dropdown System - Tidak Menutup Full Layar)
+   ────────────────────────────────────────────────────────────────────────── */
+(function initMobileNav() {
+    const nav = document.getElementById('navbar');
+    const navInner = document.querySelector('.nav-inner');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (!nav || !navInner || !navLinks) return;
+
+    // 1. Membuat tombol hamburger secara otomatis lewat DOM JavaScript
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'nav-toggle';
+    toggleBtn.setAttribute('type', 'button');
+    toggleBtn.setAttribute('aria-label', 'Buka menu navigasi');
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.setAttribute('aria-controls', 'nav-list');
+
+    // Hubungkan dengan id list menu untuk standar aksesibilitas web (ARIA)
+    navLinks.setAttribute('id', 'nav-list');
+
+    // Beri isi 3 buah garis hamburger di dalamnya
+    toggleBtn.innerHTML = `
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+        <span class="nav-toggle-bar"></span>
+    `;
+
+    // Sisipkan tombol hamburger ke dalam navbar (.nav-inner)
+    navInner.appendChild(toggleBtn);
+
+    // 2. Logika Fungsi Buka / Tutup Dropdown
+    function toggleMenu() {
+        const isOpen = nav.classList.contains('nav-active');
+        if (isOpen) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    }
+
+    function openMenu() {
+        nav.classList.add('nav-active');
+        document.body.classList.add('nav-open');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        toggleBtn.setAttribute('aria-label', 'Tutup menu navigasi');
+    }
+
+    function closeMenu() {
+        nav.classList.remove('nav-active');
+        document.body.classList.remove('nav-open');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.setAttribute('aria-label', 'Buka menu navigasi');
+    }
+
+    // Jalankan fungsi ketika tombol hamburger diklik
+    toggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+    });
+
+    // 3. Otomatis menutup dropdown jika salah satu menu tautan diklik
+    const links = navLinks.querySelectorAll('a');
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeMenu();
+            }
+        });
+    });
+
+    // 4. Pengaman: Menutup otomatis menu jika user memperbesar ukuran layar ke desktop kembali
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && nav.classList.contains('nav-active')) {
+            closeMenu();
+        }
+    }, { passive: true });
+})();
+
+
