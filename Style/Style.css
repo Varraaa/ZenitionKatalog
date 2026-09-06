@@ -1997,7 +1997,7 @@ button {
 
   .nav-toggle {
     display: inline-flex;
-    /* Tampilkan hamburger di mobile */
+    /* tampilkan hamburger di mobile */
   }
 
   /* PANEL DROPDOWN NAV (TIDAK FULL SCREEN) */
@@ -2030,7 +2030,7 @@ button {
     z-index: 99;
   }
 
-  /* State ketika Menu Di-klik aktif */
+  /* state ketika Menu Di-klik aktif */
   #navbar.nav-active .nav-links {
     transform: translateY(0);
     opacity: 1;
@@ -2053,7 +2053,7 @@ button {
 
   .nav-link:last-child {
     border-bottom: none;
-    /* Hilangkan garis di item terakhir */
+    /* hilangkan garis di item terakhir */
   }
 
   .nav-link::after {
